@@ -27,4 +27,8 @@ That will raise an HTTP service on port 8080, once it is up, you can run the fol
 ```bash
 curl --location --request GET 'localhost:8080/api/books'
 ```
-You can find the complete postman collection in the folder named [postman](postman)
+You can find the complete postman collection in the folder called [postman](postman)
+
+## cloud design
+
+![image](image.png)
