@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  title: Book API
+  description: API for managing books.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+tags:
+  - name: Book API
+    description: Endpoints for managing books
+
+paths:
+  /api/books:
+    post:
+      tags:
+        - Book API
+      summary: Create a new book
+      description: Creates and stores a new book with the given `title` and `author`.
+      requestBody:
+        description: Book to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Book successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid book data. Both `title` and `author` must be provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      tags:
+        - Book API
+      summary: Get all books
+      description: Retrieves a list of all books.
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+
+  /api/books/{id}:
+    get:
+      tags:
+        - Book API
+      summary: Get a book by ID
+      description: Retrieves a book by its unique ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to retrieve
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Book found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Book API
+      summary: Delete a book by ID
+      description: Deletes an existing book by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to delete
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '204':
+          description: Book successfully deleted
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - Book API
+      summary: Update a book by ID
+      description: Updates an existing book's `title` or `author` by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to update
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: Updated book data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          description: Book successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid book data. Both `title` and `author` must be provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the book
+          example: 1
+        title:
+          type: string
+          description: Title of the book
+          example: "Clean Code"
+        author:
+          type: string
+          description: Author of the book
+          example: "Robert C. Martin"
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: "Book with ID 1 not found."
